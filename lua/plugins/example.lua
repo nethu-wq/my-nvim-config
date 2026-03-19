@@ -1,125 +1,18 @@
--- since this is just an example spec, don't actually load anything here and return an empty spec
--- stylua: ignore
-
-
--- every spec file under the "plugins" directory will be loaded automatically by lazy.nvim
---
--- In your plugin files, you can:
--- * add extra plugins
--- * disable/enabled LazyVim plugins
--- * override the configuration of LazyVim plugins
 return {
-  -- add gruvbox
-  { "ellisonleao/gruvbox.nvim" },
-
-  -- Configure LazyVim to load gruvbox
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "catppuccin-mocha",
+      colorscheme = "rose-pine-moon",
     },
   },
 
-  -- change trouble config
-  {
-    "folke/trouble.nvim",
-    -- opts will be merged with the parent spec
-    opts = { use_diagnostic_signs = true },
-  },
-
-  -- disable trouble
-  { "folke/trouble.nvim", enabled = false },
-
-  -- override nvim-cmp and add cmp-emoji
-  {
-    "hrsh7th/nvim-cmp",
-    dependencies = { "hrsh7th/cmp-emoji" },
-    ---@param opts cmp.ConfigSchema
-    opts = function(_, opts)
-      table.insert(opts.sources, { name = "emoji" })
-    end,
-  },
-
-  -- change some telescope options and a keymap to browse plugin files
-  {
-    "nvim-telescope/telescope.nvim",
-    keys = {
-      -- add a keymap to browse plugin files
-      -- stylua: ignore
-      {
-        "<leader>fp",
-        function() require("telescope.builtin").find_files({ cwd = require("lazy.core.config").options.root }) end,
-        desc = "Find Plugin File",
-      },
-    },
-    -- change some options
-    opts = {
-      defaults = {
-        layout_strategy = "horizontal",
-        layout_config = { prompt_position = "top" },
-        sorting_strategy = "ascending",
-        winblend = 0,
-      },
-    },
-  },
-
-  -- add pyright to lspconfig
-  {
-    "neovim/nvim-lspconfig",
-    ---@class PluginLspOpts
-    opts = {
-      ---@type lspconfig.options
-      servers = {
-        -- pyright will be automatically installed with mason and loaded with lspconfig
-        pyright = {},
-      },
-    },
-  },
-
-  -- add tsserver and setup with typescript.nvim instead of lspconfig
-  -- {
-  --   "neovim/nvim-lspconfig",
-  --   dependencies = {
-  --     "jose-elias-alvarez/typescript.nvim",
-  -- init = function()
-  --   require("lazyvim.util").lsp.on_attach(function(_, buffer)
-  --     -- stylua: ignore
-  --     vim.keymap.set( "n", "<leader>co", "TypescriptOrganizeImports", { buffer = buffer, desc = "Organize Imports" })
-  --     vim.keymap.set("n", "<leader>cR", "TypescriptRenameFile", { desc = "Rename File", buffer = buffer })
-  --   end)
-  -- end,
-  --    },
-  --    ---@class PluginLspOpts
-  --    opts = {
-  -- ---@type lspconfig.options
-  -- servers = {
-  --   -- tsserver will be automatically installed with mason and loaded with lspconfig
-  --   tsserver = {},
-  -- },
-  -- -- you can do any additional lsp server setup here
-  -- -- return true if you don't want this server to be setup with lspconfig
-  -- ---@type table<string, fun(server:string, opts:_.lspconfig.options):boolean?>
-  -- setup = {
-  --   -- example to setup with typescript.nvim
-  --   tsserver = function(_, opts)
-  --     require("typescript").setup({ server = opts })
-  --     return true
-  --   end,
-  --   -- Specify * to use this function as a fallback for any server
-  --   -- ["*"] = function(server, opts) end,
-  -- },
-  --    },
-  --  },
-
-   -- for typescript, LazyVim also includes extra specs to properly setup lspconfig,
-   -- treesitter, mason and typescript.nvim. So instead of the above, you can use:
   { import = "lazyvim.plugins.extras.lang.typescript" },
+  { import = "lazyvim.plugins.extras.lang.json" },
 
-  -- add more treesitter parsers
   {
     "nvim-treesitter/nvim-treesitter",
-    opts = {
-      ensure_installed = {
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, {
         "bash",
         "html",
         "javascript",
@@ -134,57 +27,12 @@ return {
         "typescript",
         "vim",
         "yaml",
-      },
-    },
-  },
-
-  -- since `vim.tbl_deep_extend`, can only merge tables and not lists, the code above
-  -- would overwrite `ensure_installed` with the new value.
-  -- If you'd rather extend the default config, use the code below instead:
-  {
-    "nvim-treesitter/nvim-treesitter",
-    opts = function(_, opts)
-      -- add tsx and treesitter
-      vim.list_extend(opts.ensure_installed, {
-        "tsx",
-        "typescript",
       })
     end,
   },
 
-  -- the opts function can also be used to change the default opts:
   {
-    "nvim-lualine/lualine.nvim",
-    event = "VeryLazy",
-    opts = function(_, opts)
-      table.insert(opts.sections.lualine_x, {
-        function()
-          return "😄"
-        end,
-      })
-    end,
-  },
-
-  -- or you can return new options to override all the defaults
-  {
-    "nvim-lualine/lualine.nvim",
-    event = "VeryLazy",
-    opts = function()
-      return {
-        --[[add your custom lualine config here]]
-      }
-    end,
-  },
-
-  -- use mini.starter instead of alpha
-  --{ import = "lazyvim.plugins.extras.ui.mini-starter" },
-
-  -- add jsonls and schemastore packages, and setup treesitter for json, json5 and jsonc
-  { import = "lazyvim.plugins.extras.lang.json" },
-
-  -- add any tools you want to have installed below
-  {
-    "williamboman/mason.nvim",
+    "mason-org/mason.nvim",
     opts = {
       ensure_installed = {
         "stylua",
@@ -195,15 +43,271 @@ return {
       },
     },
   },
+
   {
-  "xiyaowong/transparent.nvim",
-  config = function()
-    require("transparent").setup({
-      extra_groups = {
-        "NormalFloat", 
-        "NvimTreeNormal",
+    "xiyaowong/transparent.nvim",
+    config = function()
+      require("transparent").setup({
+        extra_groups = { "NormalFloat", "NvimTreeNormal" },
+      })
+    end,
+  },
+
+  {
+    "sphamba/smear-cursor.nvim",
+    opts = {
+      cursor_color = "#ff0000",
+      stiffness = 0.6,
+      trailing_stiffness = 0.3,
+      distance_stop_animating = 0.1,
+      color_levels = 4,
+      gamma = 1.0,
+      volume_reduction_exponent = 0.3,
+      minimum_volume_factor = 0.3,
+      trailing_exponent = 0,
+      hide_target_hack = true,
+    },
+    config = function(_, opts)
+      local smear = require("smear_cursor")
+      local colors = {
+        "#ff0000",
+        "#ff7700",
+        "#ffff00",
+        "#00ff00",
+        "#0000ff",
+        "#8b00ff",
+      }
+      local index = 1
+      vim.loop.new_timer():start(
+        0,
+        200,
+        vim.schedule_wrap(function()
+          opts.cursor_color = colors[index]
+          smear.setup(opts)
+          index = index % #colors + 1
+        end)
+      )
+      smear.setup(opts)
+    end,
+  },
+  {
+    "folke/zen-mode.nvim",
+    opts = { window = { width = 0.85 } },
+    keys = {
+      { "<leader>z", "<cmd>ZenMode<cr>", desc = "Zen Mode" },
+    },
+  },
+
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    main = "ibl",
+    opts = {
+      indent = { char = "│" },
+      scope = { enabled = true, show_start = true },
+    },
+  },
+
+  { "hiphish/rainbow-delimiters.nvim", event = "VeryLazy" },
+
+  {
+    "nvim-mini/mini.animate",
+    event = "VeryLazy",
+    opts = {
+      resize = { enable = true },
+      scroll = { enable = true },
+    },
+  },
+
+  {
+    "akinsho/toggleterm.nvim",
+    version = "*",
+    opts = {
+      open_mapping = [[<c-\>]],
+      direction = "float",
+      float_opts = { border = "curved" },
+    },
+  },
+
+  { "NvChad/nvim-colorizer.lua", opts = {
+    user_default_options = { names = false },
+  } },
+
+  {
+    "folke/noice.nvim",
+    event = "VeryLazy",
+    dependencies = { "MunifTanjim/nui.nvim" },
+    opts = {
+      lsp = {
+        override = {
+          ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+          ["vim.lsp.util.stylize_markdown"] = true,
+        },
       },
-    })
-  end,
-}
+      presets = {
+        bottom_search = true,
+        command_palette = true,
+        long_message_to_split = true,
+        inc_rename = true,
+      },
+    },
+  },
+  {
+    "folke/snacks.nvim",
+    config = function(_, opts)
+      vim.api.nvim_set_hl(0, "SnacksDashboardHeader", { fg = "#f38ba8" })
+      require("snacks").setup(opts)
+    end,
+    opts = {
+      dashboard = {
+        enabled = true,
+        sections = {
+          { section = "header" },
+          { section = "keys", gap = 1, padding = 1 },
+          { section = "startup" },
+        },
+        preset = {
+          header = [[
+ ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗
+ ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║
+ ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║
+ ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║
+ ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║
+ ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝]],
+        },
+      },
+    },
+  },
+  {
+    "karb94/neoscroll.nvim",
+    config = function()
+      require("neoscroll").setup({
+        mappings = { "<C-u>", "<C-d>", "<C-b>", "<C-f>", "<C-y>", "<C-e>", "zt", "zz", "zb" },
+        hide_cursor = true,
+        stop_eof = true,
+        cursor_scrolls_alone = true,
+        easing_function = "quadratic",
+      })
+    end,
+  },
+  {
+    "tamton-aquib/duck.nvim",
+    keys = {
+      {
+        "<leader>dd",
+        function()
+          require("duck").hatch("🐧", 5)
+        end,
+        desc = "Hatch Penguin",
+      },
+      {
+        "<leader>dk",
+        function()
+          require("duck").cook()
+        end,
+        desc = "Cook Penguin",
+      },
+      {
+        "<leader>da",
+        function()
+          require("duck").cook_all()
+        end,
+        desc = "Cook All",
+      },
+    },
+  },
+  {
+    "stevearc/dressing.nvim",
+    opts = {
+      input = {
+        enabled = true,
+        border = "rounded",
+        win_options = {
+          winblend = 10,
+        },
+      },
+      select = {
+        enabled = true,
+        backend = { "telescope", "builtin" },
+      },
+    },
+  },
+  {
+    "mg979/vim-visual-multi",
+    branch = "master",
+    init = function()
+      vim.g.VM_maps = {
+        ["Find Under"] = "<C-d>",
+        ["Find Subword Under"] = "<C-d>",
+        ["Add Cursor Up"] = "<C-Up>",
+        ["Add Cursor Down"] = "<C-Down>",
+      }
+    end,
+  },
+  {
+    "windwp/nvim-autopairs",
+    event = "InsertEnter",
+    opts = {
+      check_ts = true,
+      ts_config = {
+        java = { "string", "source" },
+        html = { "string", "source" },
+      },
+    },
+  },
+  { "rose-pine/neovim", name = "rose-pine" },
+  -- Add this to your Lazy plugins list
+  {
+    "folke/drop.nvim",
+    config = function()
+      -- defer until the dashboard buffer is ready
+      vim.defer_fn(function()
+        local status, drop = pcall(require, "drop")
+        if not status then
+          vim.notify("drop.nvim not loaded!", vim.log.levels.WARN)
+          return
+        end
+
+        local bufnr = vim.api.nvim_get_current_buf()
+
+        drop.setup({
+          theme = "snow",
+          max = 80, -- number of snowflakes
+          interval = 50, -- lower = faster falling
+          wind = 2, -- horizontal drift
+          buffer = bufnr, -- attach to dashboard
+          color_override = function(x)
+            local total_cols = #wave_colors
+            return wave_colors[(x % total_cols) + 1] or "#ffffff"
+          end,
+          drift = function()
+            return math.random(-1, 1)
+          end,
+        })
+      end, 150)
+    end,
+  },
+  {
+    "NvChad/nvim-colorizer.lua",
+    config = function()
+      require("colorizer").setup({
+        user_default_options = {
+          names = true, -- enables color names like 'blue'
+          mode = "background", -- or "foreground"
+        },
+      })
+    end,
+  },
+  {
+    "uga-rosa/ccc.nvim",
+    opts = {
+      highlighter = {
+        auto_enable = true,
+        lsp = true,
+      },
+    },
+    keys = {
+      -- Press Leader + c + p to open the Color Picker
+      { "<leader>cp", "<cmd>CccPick<cr>", desc = "Color Picker" },
+    },
+  },
 }
