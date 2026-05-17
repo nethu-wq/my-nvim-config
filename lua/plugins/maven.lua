@@ -1,13 +1,9 @@
 return {
   {
-    "akinsho/toggleterm.nvim",
-    version = "*",
-    opts = { shade_terminals = false },
-  },
-  {
     dir = vim.fn.stdpath("config"),
     name = "maven-keymaps",
     lazy = false,
+    dependencies = { "akinsho/toggleterm.nvim" },
     config = function()
       local Terminal = require("toggleterm.terminal").Terminal
 
@@ -51,7 +47,11 @@ return {
       end
 
       local function artifact_id(root)
-        for line in io.lines(root .. "\\pom.xml") do
+        local ok, iter = pcall(io.lines, root .. "\\pom.xml")
+        if not ok then
+          return "app"
+        end
+        for line in iter do
           local id = line:match("<artifactId>(.+)</artifactId>")
           if id then
             return id
@@ -62,11 +62,13 @@ return {
 
       local function write_file(path, content)
         vim.fn.mkdir(vim.fn.fnamemodify(path, ":h"), "p")
-        local f = io.open(path, "w")
-        if f then
-          f:write(content)
-          f:close()
+        local f, err = io.open(path, "w")
+        if not f then
+          vim.notify("Failed to write: " .. path .. "\n" .. (err or ""), vim.log.levels.ERROR)
+          return
         end
+        f:write(content)
+        f:close()
       end
 
       vim.keymap.set("n", "<leader>mn", function()

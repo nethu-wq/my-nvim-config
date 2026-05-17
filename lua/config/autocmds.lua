@@ -11,6 +11,23 @@
 local wave_colors = { "#0a2540", "#0f3d66", "#145da0", "#1e81b0", "#2e8bc0", "#48cae4", "#72efdd", "#90e0ef", "#ade8f4" }
 local wave_index = 1
 
+-- Snow effect: only initialize once, when the dashboard first opens
+vim.api.nvim_create_autocmd("User", {
+  pattern = "SnacksDashboardOpened",
+  once = true,
+  callback = function()
+    local drop_colors = { "#ff563d", "#5eb387", "#b652af", "#ffc2a1", "#89b4fa", "#cba6f7" }
+    require("drop").setup({
+      theme = "snow",
+      max = 80,
+      interval = 50,
+      wind = 2,
+      drift = function() return math.random(-1, 1) end,
+      color_override = function(x) return drop_colors[(x % #drop_colors) + 1] end,
+    })
+  end,
+})
+
 vim.api.nvim_create_autocmd("User", {
   pattern = "SnacksDashboardOpened",
   callback = function()
