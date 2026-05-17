@@ -28,33 +28,39 @@ vim.api.nvim_create_autocmd("User", {
   end,
 })
 
-vim.api.nvim_create_autocmd("User", {
-  pattern = "SnacksDashboardOpened",
-  callback = function()
-    if _G._wave_timer then return end
-    _G._wave_timer = vim.uv.new_timer()
-    _G._wave_timer:start(0, 120, vim.schedule_wrap(function()
-      local total = #wave_colors
-      vim.api.nvim_set_hl(0, "SnacksDashboardHeader", { fg = wave_colors[(wave_index % total) + 1] })
-      vim.api.nvim_set_hl(0, "SnacksDashboardKey",    { fg = wave_colors[((wave_index + 1) % total) + 1] })
-      vim.api.nvim_set_hl(0, "SnacksDashboardDesc",   { fg = wave_colors[((wave_index + 2) % total) + 1] })
-      vim.api.nvim_set_hl(0, "SnacksDashboardIcon",   { fg = wave_colors[((wave_index + 3) % total) + 1] })
-      vim.api.nvim_set_hl(0, "SnacksDashboardFooter", { fg = wave_colors[((wave_index + 4) % total) + 1] })
-      wave_index = (wave_index + 1) % total
-    end))
-  end,
-})
+local function start_wave_timer()
+  if _G._wave_timer then return end
+  _G._wave_timer = vim.uv.new_timer()
+  _G._wave_timer:start(0, 120, vim.schedule_wrap(function()
+    local total = #wave_colors
+    vim.api.nvim_set_hl(0, "SnacksDashboardHeader", { fg = wave_colors[(wave_index % total) + 1] })
+    vim.api.nvim_set_hl(0, "SnacksDashboardKey",    { fg = wave_colors[((wave_index + 1) % total) + 1] })
+    vim.api.nvim_set_hl(0, "SnacksDashboardDesc",   { fg = wave_colors[((wave_index + 2) % total) + 1] })
+    vim.api.nvim_set_hl(0, "SnacksDashboardIcon",   { fg = wave_colors[((wave_index + 3) % total) + 1] })
+    vim.api.nvim_set_hl(0, "SnacksDashboardFooter", { fg = wave_colors[((wave_index + 4) % total) + 1] })
+    wave_index = (wave_index + 1) % total
+  end))
+end
 
-vim.api.nvim_create_autocmd("User", {
-  pattern = "SnacksDashboardClosed",
-  callback = function()
-    if _G._wave_timer then
-      _G._wave_timer:stop()
-      _G._wave_timer:close()
-      _G._wave_timer = nil
-    end
-  end,
-})
+local function stop_wave_timer()
+  if _G._wave_timer then
+    _G._wave_timer:stop()
+    _G._wave_timer:close()
+    _G._wave_timer = nil
+  end
+end
+
+vim.api.nvim_create_autocmd("User", { pattern = "SnacksDashboardOpened", callback = start_wave_timer })
+vim.api.nvim_create_autocmd("User", { pattern = "SnacksDashboardClosed", callback = stop_wave_timer })
+
+-- autocmds.lua loads on VeryLazy, after the dashboard is already open at startup.
+-- If a dashboard buffer is already visible, start the timer immediately.
+for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+  if vim.bo[buf].filetype == "snacks_dashboard" then
+    start_wave_timer()
+    break
+  end
+end
 
 
 -- Cycle cursor line color every 5 seconds
