@@ -62,6 +62,8 @@ winget install sharkdp.fd
 
 ## 6. Node.js (for TypeScript/JavaScript LSP)
 
+Required for the TypeScript and JavaScript language server to work (autocompletion, errors, go-to-definition in JS/TS files).
+
 ```
 winget install OpenJS.NodeJS
 ```
@@ -69,6 +71,8 @@ winget install OpenJS.NodeJS
 ---
 
 ## 7. Java JDK + Maven (for the Java workflow)
+
+Required for Java autocompletion, error checking, and the built-in Maven commands (`<leader>mb`, `<leader>mn` etc). Skip this if you're not doing Java development.
 
 ```
 winget install Microsoft.OpenJDK.21
