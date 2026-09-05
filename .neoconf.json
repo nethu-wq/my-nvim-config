@@ -11,5 +11,8 @@
         "enabled": true
       }
     }
+  },
+  "lua_ls": {
+    "Lua.diagnostics.globals": ["vim"]
   }
 }
