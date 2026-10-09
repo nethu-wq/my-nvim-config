@@ -80,14 +80,23 @@ _G._cycle_timer:start(0, 5000, vim.schedule_wrap(function()
   local color = cycle_colors[color_index]
   vim.api.nvim_set_hl(0, "CursorLine", { bg = color })
   vim.api.nvim_set_hl(0, "CursorLineNr", { fg = color, bold = true })
-  local ok, smear = pcall(require, "smear_cursor")
-  if ok and smear.config and type(smear.config) == "table" then
-    smear.config.cursor_color = color
-  end
   _G.lualine_cycle_color = color
   local lok, lualine = pcall(require, "lualine")
   if lok then lualine.refresh() end
   color_index = (color_index % #cycle_colors) + 1
+end))
+
+-- Rainbow smear-cursor trail: change the trail color every 200ms
+local smear_colors = { "#ff0000", "#ff7700", "#ffff00", "#00ff00", "#0000ff", "#8b00ff" }
+local smear_index = 1
+
+_G._smear_timer = vim.uv.new_timer()
+_G._smear_timer:start(0, 200, vim.schedule_wrap(function()
+  local ok, smear = pcall(require, "smear_cursor")
+  if ok then
+    smear.cursor_color = smear_colors[smear_index]
+  end
+  smear_index = (smear_index % #smear_colors) + 1
 end))
 
 -- Disable format-on-save for Java (jdtls LSP formatter breaks files)
