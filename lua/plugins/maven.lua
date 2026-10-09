@@ -112,6 +112,7 @@ return {
         </dependency>
     </dependencies>
     <build>
+        <finalName>%s</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -133,7 +134,6 @@ return {
                             <mainClass>${mainClass}</mainClass>
                         </manifest>
                     </archive>
-                    <finalName>%s</finalName>
                 </configuration>
             </plugin>
             <plugin>

@@ -39,8 +39,8 @@ Vsual mode+leader+XX+Chracter :To sorround the selected text.
 When nameing java projects:The Rule: Use lowercase letters and hyphens (-) instead of spaces or underscores.
 ls: to list all the buffers. + :bd the number of the buffers you want to delete.
 Space + d + d:Spawn penguin
-Space + d + a:Remove all penguins
-Ctrl + d:Select word under cursor, keep pressing to select next match.
+Space + d + Shift+a:Remove all penguins
+Ctrl + n:Select word under cursor, keep pressing to select next match.
 Ctrl + Up/Ctrl + Down:Add cursor above/Add cursor below
 Space + c + a:Code actionsShows available fixes and suggestions at cursor.
 Space + c + r:Rename symbolRenames a variable everywhere it's used in the project.
@@ -113,7 +113,33 @@ leader+c+f-manual auto famatting for any file type.
 
   Fun
   - <leader>dd — hatch penguin
-  - <leader>dk — cook penguin
-  - <leader>da — cook all
+  - <leader>dK — cook penguin
+  - <leader>dA — cook all
   - <leader>fml — make it rain
   - <leader>fmg — game of life
+
+  Debugging (DAP) — added when lazyvim.plugins.extras.dap.core was enabled
+  - <leader>db — toggle breakpoint
+  - <leader>dB — breakpoint with condition
+  - <leader>dc — run / continue
+  - <leader>da — run with args
+  - <leader>dC — run to cursor
+  - <leader>dg — go to line (no execute)
+  - <leader>di — step into
+  - <leader>do — step out
+  - <leader>dO — step over
+  - <leader>dj — down stack frame
+  - <leader>dk — up stack frame
+  - <leader>dl — run last
+  - <leader>dP — pause
+  - <leader>dr — toggle REPL
+  - <leader>ds — session
+  - <leader>dt — terminate
+  - <leader>dw — hover widgets
+  - <leader>du — toggle debug UI (dap-ui)
+  - <leader>de — eval expression (normal/visual)
+
+  Java Test Runner (jdtls, needs DAP installed)
+  - <leader>tt — run all tests in current class
+  - <leader>tr — run nearest test
+  - <leader>tT — pick a test to run

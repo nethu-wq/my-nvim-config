@@ -127,6 +127,8 @@ return {
       resize = { enable = true },
       -- scroll disabled: neoscroll handles it (fixes gg/f bugs)
       scroll = { enable = false },
+      -- cursor disabled: smear-cursor + beacon already animate cursor movement/jumps
+      cursor = { enable = false },
     },
   },
   {
@@ -165,6 +167,9 @@ return {
   {
     "folke/snacks.nvim",
     opts = {
+      -- neoscroll and hlchunk already handle these; LazyVim enables both by default
+      scroll = { enabled = false },
+      indent = { enabled = false },
       dashboard = {
         enabled = true,
         sections = {
@@ -201,14 +206,14 @@ return {
         desc = "Hatch",
       },
       {
-        "<leader>dk",
+        "<leader>dK",
         function()
           require("duck").cook()
         end,
         desc = "Cook",
       },
       {
-        "<leader>da",
+        "<leader>dA",
         function()
           require("duck").cook_all()
         end,
@@ -223,7 +228,7 @@ return {
   {
     "mg979/vim-visual-multi",
     init = function()
-      vim.g.VM_maps = { ["Find Under"] = "<C-d>", ["Add Cursor Up"] = "<C-Up>", ["Add Cursor Down"] = "<C-Down>" }
+      vim.g.VM_maps = { ["Find Under"] = "<C-n>", ["Add Cursor Up"] = "<C-Up>", ["Add Cursor Down"] = "<C-Down>" }
     end,
   },
   {
@@ -307,6 +312,8 @@ return {
   },
 
   -- 14. Headlines (markdown heading backgrounds)
+  -- render-markdown (from the markdown extra) styles headings too; disable it so they don't double up
+  { "MeanderingProgrammer/render-markdown.nvim", enabled = false },
   {
     "lukas-reineke/headlines.nvim",
     dependencies = "nvim-treesitter/nvim-treesitter",
