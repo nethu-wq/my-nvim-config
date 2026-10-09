@@ -14,5 +14,15 @@ vim.keymap.set("n", "<leader>r", function()
 end, { desc = "Run Python file" })
 vim.keymap.set("v", "<leader>XX", "<Plug>(nvim-surround-visual)", { desc = "Surround Selection (Leader XX)" })
 
+-- Open current file in its default Windows app (e.g. a PDF in your PDF viewer)
+vim.keymap.set("n", "<leader>fo", function()
+  local file = vim.api.nvim_buf_get_name(0)
+  if file == "" then
+    vim.notify("Buffer has no file", vim.log.levels.WARN)
+    return
+  end
+  vim.ui.open(file)
+end, { desc = "Open File in Default App" })
+
 -- Line numbers
 vim.api.nvim_set_hl(0, "LineNr", { fg = "#b4befe" })

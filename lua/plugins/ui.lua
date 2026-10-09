@@ -170,6 +170,12 @@ return {
       -- neoscroll and hlchunk already handle these; LazyVim enables both by default
       scroll = { enabled = false },
       indent = { enabled = false },
+      -- show images (png/jpg/gif/webp...) inside nvim; WezTerm supports it, ImageMagick converts formats
+      -- pdf left out (config/documents.lua shows it as text); video left out (needs ffmpeg)
+      image = {
+        enabled = true,
+        formats = { "png", "jpg", "jpeg", "gif", "bmp", "webp", "tiff", "heic", "avif", "icns" },
+      },
       dashboard = {
         enabled = true,
         sections = {
