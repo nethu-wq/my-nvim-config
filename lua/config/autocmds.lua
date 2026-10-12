@@ -99,14 +99,6 @@ _G._smear_timer:start(0, 200, vim.schedule_wrap(function()
   smear_index = (smear_index % #smear_colors) + 1
 end))
 
--- Disable format-on-save for Java (jdtls LSP formatter breaks files)
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "java",
-  callback = function()
-    vim.b.autoformat = false
-  end,
-})
-
 -- Exit terminal mode with jk or <Esc><Esc>
 vim.api.nvim_create_autocmd("TermOpen", {
   callback = function(ev)

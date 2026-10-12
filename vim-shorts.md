@@ -96,6 +96,7 @@ leader+c+f-manual auto famatting for any file type.
   - <leader>gD — diffview close
   - <leader>z — zen mode
   - <leader>tw — twilight
+  - <leader>fd — cd to the folder of the file you're editing (new terminals open there)
 
   Editing
   - jk — exit insert mode (also works in
@@ -143,3 +144,15 @@ leader+c+f-manual auto famatting for any file type.
   - <leader>tt — run all tests in current class
   - <leader>tr — run nearest test
   - <leader>tT — pick a test to run
+
+  Java (jdtls) — in Java files
+  - <leader>co — organize imports
+  - <leader>cxv — extract variable (normal/visual)
+  - <leader>cxc — extract constant (normal/visual)
+  - <leader>cxm — extract method (visual)
+  - <leader>cgs — go to super implementation
+  - <leader>cgS — go to test subjects
+  - <leader>cf — format now
+  - saving a Java file auto-formats it (google-java-format, 4-space AOSP style)
+  - completion never suggests java.awt.*, com.sun.*, sun.*, jdk.* (no more java.awt.List)
+  - breakpoints (<leader>db) work in test files too, then <leader>tr / <leader>tt to debug the test
